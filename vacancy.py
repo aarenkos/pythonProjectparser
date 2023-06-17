@@ -50,11 +50,18 @@ class Vacancy:
                 if vacancy_hh['salary']['from'] is None:
                     salary_from = 0
                 else:
-                    salary_from = vacancy_hh['salary']['from']
+                    if vacancy_hh['salary']['currency'] == "USD":
+                        salary_from = (vacancy_hh['salary']['from']) * 83
+                    else:
+                        salary_from = vacancy_hh['salary']['from']
 
                 if vacancy_hh['salary']['to'] is None:
                     salary_to = 0
                 else:
+                    if vacancy_hh['salary']['currency'] == "USD":
+                        salary_from = (vacancy_hh['salary']['to']) * 83
+                    else:
+                        salary_from = vacancy_hh['salary']['to']
                     salary_to = vacancy_hh['salary']['to']
 
                 if vacancy_hh['snippet']['requirement'] is None:
@@ -163,9 +170,6 @@ class Vacancy:
 
         return sort_vacancy_salary
 
-    def sort_vacancy_salary_json(self):
-
-        pass
 
 
 

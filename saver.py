@@ -87,38 +87,17 @@ class SaverJson(Saver):
     def delete_vacancy(self):
         os.remove(self.filename)
 
-    def get_vacansy_keywords(self,keywords):
+    def get_vacansy_keywords(self, keywords):
         some_keywords = keywords.split()
         vacancy_keywords =[]
         for word in some_keywords:
             for vacansy in self.sort_vacancy:
-                if word in (vacansy.name or vacansy.organization or vacansy.requirement
+                if word.lower() in (vacansy.name or vacansy.organization or vacansy.requirement
                             or vacansy.responsibility):
                     vacancy_keywords.append(vacansy)
             if vacancy_keywords == []:
                 return print('По заданным словам ничего не найдено')
 
         return vacancy_keywords
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def delete_vacancy(self):
-        pass
-
-
-
-
-
 
 
