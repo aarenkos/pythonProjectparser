@@ -21,7 +21,7 @@ class Vacancy:
         Название оргинизации: {self.organization},
         Зарплата от: {self.salary_from},
         Зарплата до: {self.salary_to},
-        Требуемы опыт: {self.experience},
+        Требуемый опыт: {self.experience},
         Требования: {self.requirement},
         Обязанности: {self.responsibility},
         API : {self.api},
@@ -169,9 +169,3 @@ class Vacancy:
                                      reverse=True)
 
         return sort_vacancy_salary
-
-
-
-
-
-

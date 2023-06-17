@@ -2,7 +2,7 @@ import json
 import os
 from abc import ABC, abstractmethod
 
-from vacancy import Vacancy
+from Class_vacancy import Vacancy
 
 
 class Saver(ABC):
@@ -26,25 +26,24 @@ class SaverJson(Saver):
         self.filename = filename
         self.sort_vacancy = sort_vacancy
 
-
     def add_vacancy_in_file(self):
-        vacansy_json =[]
+        vacansy_json = []
         for vacancy in self.sort_vacancy:
             vacancy_dict = {
-            'name_vacancies': vacancy.name,
-            'organization': vacancy.organization,
-            'salary_from': vacancy.salary_from,
-            'salary_to': vacancy.salary_to,
-            'experience': vacancy.experience,
-            'requirement': vacancy.requirement,
-            'responsibility': vacancy.responsibility,
-            'api': vacancy.api,
-            'url_vacancy': vacancy.url_vacancy
+                'name_vacancies': vacancy.name,
+                'organization': vacancy.organization,
+                'salary_from': vacancy.salary_from,
+                'salary_to': vacancy.salary_to,
+                'experience': vacancy.experience,
+                'requirement': vacancy.requirement,
+                'responsibility': vacancy.responsibility,
+                'api': vacancy.api,
+                'url_vacancy': vacancy.url_vacancy
             }
             vacansy_json.append(vacancy_dict)
         with open(self.filename, 'w', encoding='utf-8') as file:
             json.dump(vacansy_json, file, ensure_ascii=False)
-
+        return print("Вакансии записаны в файл")
 
     def get_vacancy_by_file(self):
 
@@ -63,7 +62,7 @@ class SaverJson(Saver):
                 url_vacancy = vacansy["url_vacancy"]
 
                 vacancy_from_file.append(Vacancy(name, salary_from, salary_to, requirement,
-                                                  responsibility, organization, experience, url_vacancy, api))
+                                                 responsibility, organization, experience, url_vacancy, api))
 
         return vacancy_from_file
 
@@ -79,25 +78,21 @@ class SaverJson(Saver):
                     if vacansy.salary_to >= user_salary:
                         break
 
-        user_sort_salary =self.sort_vacancy
+        user_sort_salary = self.sort_vacancy
         del user_sort_salary[index:-1]
-        return  user_sort_salary
-
+        return user_sort_salary
 
     def delete_vacancy(self):
-        os.remove(self.filename)
+        if os.path.isfile(self.filename):
+            os.remove(self.filename)
+        else:
+            return print("Файл отсутствует")
 
     def get_vacansy_keywords(self, keywords):
-        some_keywords = keywords.split()
-        vacancy_keywords =[]
-        for word in some_keywords:
+        user_keywords = keywords.split()
+        vacancy_keywords = []
+        for word in user_keywords:
             for vacansy in self.sort_vacancy:
-                if word.lower() in (vacansy.name or vacansy.organization or vacansy.requirement
-                            or vacansy.responsibility):
+                if word.lover() in str(vacansy.requirement):
                     vacancy_keywords.append(vacansy)
-            if vacancy_keywords == []:
-                return print('По заданным словам ничего не найдено')
-
         return vacancy_keywords
-
-

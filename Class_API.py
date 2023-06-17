@@ -2,7 +2,9 @@ import json
 from abc import ABC, abstractmethod
 import requests
 
+
 class SiteVacancyAPI(ABC):
+    """"""
 
     @abstractmethod
     def get_vacancies(self):
