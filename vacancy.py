@@ -14,13 +14,11 @@ class Vacancy:
         self.url_vacancy = url_vacancy
         self.api = api
 
-
-
     def __str__(self):
 
         return f""" 
         Название вакансии: {self.name}
-        Название оргинизыции: {self.organization},
+        Название оргинизации: {self.organization},
         Зарплата от: {self.salary_from},
         Зарплата до: {self.salary_to},
         Требуемы опыт: {self.experience},
@@ -30,8 +28,8 @@ class Vacancy:
         Ссылка на вакансию: {self.url_vacancy}
         """
 
-
-    def get_modifity_vacancy_hh(self):
+    @staticmethod
+    def get_modifity_vacancy_hh():
 
         modifity_hh_vacancy = []
         try:
@@ -84,28 +82,18 @@ class Vacancy:
                 else:
                     url_vacancy = vacancy_hh['alternate_url']
                 api = 'HeadHunter'
-                vacancy_dict = {
-                    'name_vacancies': name,
-                    'organization': organization,
-                    'salary_from': salary_from,
-                    'salary_to': salary_to,
-                    'experience': experience,
-                    'requirement': requirement,
-                    'responsibility': responsibility,
-                    'api': api,
-                    'url_vacancy': url_vacancy
-                }
 
-                modifity_hh_vacancy.append(vacancy_dict)
+                modifity_hh_vacancy.append(Vacancy(name, salary_from, salary_to, requirement,
+                                                   responsibility, organization, experience, url_vacancy, api))
 
             return modifity_hh_vacancy
 
-
-    def get_modifity_vacancy_sj(self):
+    @staticmethod
+    def get_modifity_vacancy_sj():
 
         modifity_sj_vacancy = []
         try:
-            with open('data_sj.json.json') as file_sj:
+            with open('data_sj.json', encoding='utf8') as file_sj:
                 data_sj_vacancy = json.load(file_sj)
                 file_sj.close()
         except FileNotFoundError:
@@ -132,7 +120,7 @@ class Vacancy:
                 if vacancy_sj['vacancyRichText'] is None:
                     requirement = 'Требования не указаны'
                 else:
-                    requirement = vacancy_sj['vacancyRichText']
+                    requirement = None
 
                 if vacancy_sj['candidat'] is None:
                     responsibility = 'Обязанности не указаны'
@@ -156,60 +144,30 @@ class Vacancy:
 
                 api = 'SuperJob'
 
-                vacancy_dict = {
-                    'name_vacancies': name,
-                    'organization': organization,
-                    'salary_from': salary_from,
-                    'salary_to': salary_to,
-                    'experience': experience,
-                    'requirement': requirement,
-                    'responsibility': responsibility,
-                    'api': api,
-                    'url_vacancy': url_vacancy
-                }
-
-                modifity_sj_vacancy.append(vacancy_dict)
+                modifity_sj_vacancy.append(Vacancy(name, salary_from, salary_to, requirement,
+                                                   responsibility, organization, experience, url_vacancy, api))
 
                 return modifity_sj_vacancy
 
-    def summ_vacancy(self, modifity_sj_vacancy, modifity_hh_vacancy):
+    @staticmethod
+    def summ_vacancy(modifity_sj_vacancy, modifity_hh_vacancy):
         all_vacancy = modifity_sj_vacancy + modifity_hh_vacancy
 
         return all_vacancy
 
+    @staticmethod
+    def sort_by_salary(all_vacancy):
 
-    def sort_by_salary(self, all_vacancy):
-        sort_vacancy_salary = []
-
-        print(all_vacancy)
-
-        quantity_vacancy = len(all_vacancy)
-        max_salaru_example = None
-        max_salary = 0
-
-
-        print(len(all_vacancy))
-
-
-        while len(sort_vacancy_salary) != quantity_vacancy:
-
-            for vacancy in self.summ_vacancy():
-                print(vacancy)
-                if vacancy.salary_from >= max_salary:
-                    max_salary = vacancy.salary_from
-                    max_salaru_example = vacancy
-
-                sort_vacancy_salary.append(max_salaru_example)
-
-                print(max_salaru_example)
-                print (all_vacancy)
-
-                all_vacancy.remove(max_salaru_example)
-                max_salary = 0
+        sort_vacancy_salary = sorted(all_vacancy, key=lambda x: x.salary_to if x.salary_to else x.salary_from,
+                                     reverse=True)
 
         return sort_vacancy_salary
 
+    def sort_vacancy_salary_json(self):
 
-all_vacancy = Vacancy.summ_vacancy(modifity_sj_vacancy, modifity_hh_vacancy)
+        pass
 
-Vacancy.sort_by_salary(all_vacancy)
+
+
+
+
