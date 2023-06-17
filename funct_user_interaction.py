@@ -1,5 +1,6 @@
 import time
 
+from Class_API import SuperJobAPI, HhApi
 from Class_saver import SaverJson
 from Class_vacancy import Vacancy
 
@@ -17,19 +18,18 @@ def user_interaction():
             search_text = input("Введите поисковый запрос для поиска вакансий: ").lower()
             area = (input('Введите город для поиска вакансий: ')).lower().title()
 
-            # api_sj = SuperJobAPI(search_text, area)
-            # api_hh = HhApi(search_text, area)
-            # data_hh = api_hh.get_vacancies()
-            # data_super_job = api_sj.get_vacancies()
+            api_sj = SuperJobAPI(search_text, area)
+            api_hh = HhApi(search_text, area)
+            api_hh.get_vacancies()
+            api_sj.get_vacancies()
 
             modifity_sj_vacancy = Vacancy.get_modifity_vacancy_sj()
-
             modifity_hh_vacancy = Vacancy.get_modifity_vacancy_hh()
             all_vacancy = Vacancy.summ_vacancy(modifity_sj_vacancy, modifity_hh_vacancy)
 
             sort_vacancy_salary = Vacancy.sort_by_salary(all_vacancy)
             print("Вакансии отсортированы")
-            time.sleep(1)
+            time.sleep(10)
             for vacancy in sort_vacancy_salary:
                 print(vacancy)
             filename = f'{search_text}.json'

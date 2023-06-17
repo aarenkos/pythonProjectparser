@@ -4,7 +4,7 @@ import requests
 
 
 class SiteVacancyAPI(ABC):
-    """"""
+    """Абстрактный класс для работы с API сайтов с вакансиями"""
 
     @abstractmethod
     def get_vacancies(self):
@@ -12,6 +12,7 @@ class SiteVacancyAPI(ABC):
 
 
 class HhApi(SiteVacancyAPI):
+    """Класс, для работы с HeadHanter. Получение вакансий по API"""
 
     def __init__(self, search_text, area):
         self.url = "https://api.hh.ru/vacancies"
@@ -20,6 +21,8 @@ class HhApi(SiteVacancyAPI):
         self.area_hh = None
 
     def search_area_hh(self):
+        """Метод, определяющий значение, соответствующее введенному городу. Значение необходимо для отправки
+         запроса к API. Берет данные городов из файла areas.json."""
         with open('areas.json', encoding='utf8') as f:
             areas_text = f.read()
             areas_ = json.loads(areas_text)
@@ -31,9 +34,12 @@ class HhApi(SiteVacancyAPI):
                 return 'Город не найден'
 
     def get_vacancies(self):
+        """Метод, отправляющий запрос к API HeadHunter.\n
+        Отправляет, запрос, получает список вакансий, записывает в файл data_hh.json\n
+        для отправки использует введенный пользователем поисковый запрос и город.
+        """
         url = self.url
-
-        number_page = 0
+        data_hh = []
         for i in range(10):
 
             headers = {"User-Agent": "ParserVacancyAR (a.a.renkos@gmail.com)"}
@@ -41,7 +47,7 @@ class HhApi(SiteVacancyAPI):
                 'text': self.search_text,
                 'only_with_salary': True,
                 'area': self.search_area_hh(),
-                'page': number_page,
+                'page': i,
                 'per_page': 100
             }
 
@@ -51,15 +57,11 @@ class HhApi(SiteVacancyAPI):
                 break
 
             else:
-                with open('data_hh.json', 'w', encoding='utf-8') as file_vacancy_hh:
-                    json.dump(response_hh['items'], file_vacancy_hh, ensure_ascii=False)
-                    file_vacancy_hh.close()
-
-                    with open('data_hh.json', 'r', encoding='utf-8') as file_vacancy:
-                        data_hh = json.load(file_vacancy)
-                        file_vacancy_hh.close()
+                data_hh += response_hh['items']
+        with open('data_hh.json', 'w', encoding='utf-8') as file_vacancy_hh:
+            json.dump(data_hh, file_vacancy_hh, ensure_ascii=False)
+            file_vacancy_hh.close()
         print('Вакансии HeadHunter загружены')
-        return data_hh
 
 
 class SuperJobAPI(SiteVacancyAPI):
@@ -70,15 +72,14 @@ class SuperJobAPI(SiteVacancyAPI):
         self.area = area
 
     def get_vacancies(self):
-
-        count_page = 0
+        data_sj = []
         for i in range(10):
 
             url = "https://api.superjob.ru/2.0/vacancies/"
             params = {'town': self.area,
                       'keyword': self.search_text,
                       'no_agreement': 1,
-                      'page': count_page
+                      'page': i
                       }
             headers = {"X-Api-App-Id": self.api_key}
 
@@ -88,12 +89,8 @@ class SuperJobAPI(SiteVacancyAPI):
                 break
 
             else:
-                with open('data_sj.json', 'w', encoding='utf-8') as file_vacancy_sj:
-                    json.dump(response_sj['objects'], file_vacancy_sj, ensure_ascii=False)
-                    file_vacancy_sj.close()
-
-                    with open('data_hh.json', 'r', encoding='utf-8') as file_vacancy:
-                        data_sj = json.load(file_vacancy)
-                        file_vacancy_sj.close()
+                data_sj += response_sj['objects']
+        with open('data_sj.json', 'w', encoding='utf-8') as file_vacancy_sj:
+            json.dump(data_sj, file_vacancy_sj, ensure_ascii=False)
+            file_vacancy_sj.close()
         print('Вакансии SuperJob загружены')
-        return data_sj

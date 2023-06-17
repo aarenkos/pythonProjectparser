@@ -47,11 +47,15 @@ class Vacancy:
                 else:
                     name = vacancy_hh['name']
 
+
+
                 if vacancy_hh['salary']['from'] is None:
                     salary_from = 0
                 else:
                     if vacancy_hh['salary']['currency'] == "USD":
                         salary_from = (vacancy_hh['salary']['from']) * 83
+                    elif vacancy_hh['salary']['currency'] == "EUR":
+                        salary_from = (vacancy_hh['salary']['from']) * 90
                     else:
                         salary_from = vacancy_hh['salary']['from']
 
@@ -59,10 +63,12 @@ class Vacancy:
                     salary_to = 0
                 else:
                     if vacancy_hh['salary']['currency'] == "USD":
-                        salary_from = (vacancy_hh['salary']['to']) * 83
+                        salary_to = (vacancy_hh['salary']['to']) * 83
+                    elif vacancy_hh['salary']['currency'] == "EUR":
+                        salary_to = (vacancy_hh['salary']['to']) * 90
                     else:
-                        salary_from = vacancy_hh['salary']['to']
-                    salary_to = vacancy_hh['salary']['to']
+                        salary_to = vacancy_hh['salary']['to']
+
 
                 if vacancy_hh['snippet']['requirement'] is None:
                     requirement = 'Требования не указаны'
@@ -154,7 +160,7 @@ class Vacancy:
                 modifity_sj_vacancy.append(Vacancy(name, salary_from, salary_to, requirement,
                                                    responsibility, organization, experience, url_vacancy, api))
 
-                return modifity_sj_vacancy
+            return modifity_sj_vacancy
 
     @staticmethod
     def summ_vacancy(modifity_sj_vacancy, modifity_hh_vacancy):
