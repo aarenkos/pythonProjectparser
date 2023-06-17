@@ -14,7 +14,7 @@ class SiteVacancyAPI(ABC):
 class HhApi(SiteVacancyAPI):
     """Класс, для работы с HeadHanter. Получение вакансий по API"""
 
-    def __init__(self, search_text, area):
+    def __init__(self, search_text: str, area: str):
         self.url = "https://api.hh.ru/vacancies"
         self.search_text = search_text
         self.area = area
@@ -65,7 +65,11 @@ class HhApi(SiteVacancyAPI):
 
 
 class SuperJobAPI(SiteVacancyAPI):
-    def __init__(self, search_text, area):
+    """Метод, отправляющий запрос к API SuperJob.\n
+    Отправляет, запрос, получает список вакансий, записывает в файл data_hh.json\n
+    для отправки использует введенный пользователем поисковый запрос и город.
+    """
+    def __init__(self, search_text: str, area: str):
         self.api_key = 'v3.r.137598910.32afcd3d9ac651efbf0b0b18c82bfb7ae33ee357.87c9' \
                        '0ee967f7c532fe9790505571dbb571862463'
         self.search_text = search_text

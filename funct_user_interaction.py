@@ -6,6 +6,8 @@ from Class_vacancy import Vacancy
 
 
 def user_interaction():
+    """Функция для взаимодействия программы с пользователем через консоль.\n
+    Программа предлагает варианты, пользователь вводит информацию в предложенном виде"""
     while True:
 
         user_command_1 = int(input(
